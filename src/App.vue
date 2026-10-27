@@ -1,47 +1,79 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { computed, ref } from 'vue';
+import SideBar from './components/SideBar.vue';
+import { authService } from './services/authService.ts';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+// Shared layout state
+const isDesktopCollapsed = ref(false);
+const isMobileOpen = ref(false);
+
+const isLogin = ref(authService.isLogin()) ;
+
+router.afterEach(() => {
+   isLogin.value = authService.isLogin();
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="app-layout" :class="{ 'is-collapsed': isDesktopCollapsed }">
+    
+    <SideBar
+      v-if="isLogin" 
+      v-model:isDesktopCollapsed="isDesktopCollapsed" 
+      v-model:isMobileOpen="isMobileOpen" 
+    />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <!-- Main Content shared frame -->
+    <main class="main-content">
+      <router-view />
+    </main>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+/* Define design tokens matching your sidebar */
+:root {
+  --sidebar-width-full: 260px;
+  --sidebar-width-collapsed: 74px;
+  --mobile-header-height: 60px;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+/* Reset margin/padding */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #0f172a;
+  color: #f8fafc;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+/* Content adjustment for Desktop */
+.main-content {
+  flex: 1;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+/* Shift main content when sidebar collapses */
+.app-layout.is-collapsed .main-content {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
+/* Content adjustment for Mobile */
+@media (max-width: 767.98px) {
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    margin-top: var(--mobile-header-height); /* Account for top bar height */
   }
 }
 </style>
