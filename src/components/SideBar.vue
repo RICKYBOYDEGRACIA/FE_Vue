@@ -203,6 +203,39 @@ onUnmounted(() => {
   --transition-speed: 0.3s;
 }
 
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.app-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  
+  /* Pushes content right so it doesn't hide under the fixed sidebar */
+  margin-left: var(--sidebar-width-full); 
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-layout.is-collapsed .main-content {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
 /* ==========================================================================
    Mobile Top Bar (< 768px)
    ========================================================================== */
@@ -258,7 +291,6 @@ onUnmounted(() => {
    ========================================================================== */
 .sidebar-backdrop {
   display: none;
-  position: fixed;
   inset: 0;
   background-color: rgba(3, 7, 18, 0.75);
   backdrop-filter: blur(4px);
@@ -276,10 +308,6 @@ onUnmounted(() => {
    Sidebar Component Shell
    ========================================================================== */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
   height: 100vh;
   height: 100dvh; 
   width: var(--sidebar-width-full);
@@ -559,6 +587,15 @@ onUnmounted(() => {
    MOBILE RESPONSIVE RULES (< 768px)
    ========================================================================== */
 @media (max-width: 767.98px) {
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - var(--mobile-header-height));
+    margin-top: var(--mobile-header-height);
+    padding: 1rem;
+  }
+  
   .mobile-top-bar {
     display: flex;
   }

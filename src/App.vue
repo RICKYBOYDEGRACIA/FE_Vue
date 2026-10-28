@@ -50,30 +50,32 @@ body {
 
 .app-layout {
   display: flex;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
 }
 
-/* Content adjustment for Desktop */
+/* Main Content adjustment for Desktop */
 .main-content {
   flex: 1;
-  width: 200px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* Shift main content when sidebar collapses */
-.app-layout.is-collapsed .main-content {
-  margin-left: var(--sidebar-width-collapsed);
+  flex-direction: column; 
+  box-sizing: border-box;
+  transition: all 0.3s ease; 
+  margin: 20px;
 }
 
 /* Content adjustment for Mobile */
 @media (max-width: 767.98px) {
+  .app-layout {
+    flex-direction: column; 
+  }
+
   .main-content {
     margin-left: 0 !important;
     width: 100% !important;
+    height: calc(100vh - var(--mobile-header-height));
     margin-top: var(--mobile-header-height); /* Account for top bar height */
+    padding: 1rem;
   }
 }
 </style>
