@@ -27,12 +27,29 @@ const routes = [
     meta: {requiresAuth: true},
 
   },
-  {
+  {  
     path: '/user',
-    name: 'user',
     component: () => import('@/views/UserView.vue'),
     meta: {requiresAuth: true},
-  }
+    children: [
+      {
+        path: '', 
+        name: 'user-list',
+        component: () => import('@/views/UserList.vue'),
+      },
+      {
+        path: 'new',
+        name: 'new',
+        component: () => import('@/views/UserUpSert.vue'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'edit',
+        component: () => import('@/views/UserUpSert.vue'),
+      }
+    ]
+  },
+  
 ]
 
 const router = createRouter({
